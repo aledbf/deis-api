@@ -1,0 +1,33 @@
+{
+  "name": "deis-api",
+  "version": "0.0.1",
+  "description": "Node wrapper for deis.io API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aledbf/deis-api.git"
+  },
+  "keywords": [
+    "deis",
+    "paas"
+  ],
+  "author": "Manuel Alejandro de Brito Fontes <aledbf@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aledbf/deis-api.git/issues"
+  },
+  "homepage": "https://github.com/aledbf/deis-api.git",
+  "dependencies": {
+    "debug": "^2.1.1",
+    "is-object": "^1.0.1",
+    "request-json": "^0.5.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "nock": "^0.52.4",
+    "mocha": "^2.1.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  }
+}

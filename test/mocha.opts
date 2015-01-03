@@ -1,0 +1,6 @@
+--require expect.js
+--ui bdd
+--growl
+--reporter spec
+--timeout 10000
+--check-leaks
