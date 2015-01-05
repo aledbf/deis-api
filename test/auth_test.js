@@ -1,6 +1,19 @@
 var expect = require('expect.js'),
     DeisApi = require('../');
 
+function removeAccount(deis, callback) {
+  deis.login(function(err) {
+    deis.user.cancelAccount(callback);
+  });
+}
+
+function registerAndLogin(deis, callback) {
+  deis.register('deis@deis.io', function(err, user) {
+    expect(err).to.be(null);
+    deis.login(callback);
+  });
+}
+
 describe('auth suite', function() {
   it('should register just as user', function(done) {
     var deis = new DeisApi({
@@ -9,16 +22,13 @@ describe('auth suite', function() {
       password: 'opensesame'
     });
 
-    deis.login(function(err) {
+    removeAccount(deis, function(err) {
       expect(err).to.be(null);
-      deis.user.cancelAccount(function(err) {
+      deis.register('deis@deis.io', function(err, user) {
         expect(err).to.be(null);
-        deis.register('deis@deis.io', function(err, user) {
-          expect(err).to.be(null);
-          expect(user).to.be.a(Object);
-          expect(user.is_active).to.be.eql(true);
-          done();
-        });
+        expect(user).to.be.a(Object);
+        expect(user.is_active).to.be.eql(true);
+        done();
       });
     });
   });
@@ -44,31 +54,26 @@ describe('auth suite', function() {
       password: 'newuser'
     });
 
-    deis.register('deis@deis.io', function(err, user) {
-      expect(err).to.be(null);
-      deis.login(function(err) {
+    removeAccount(deis, function(err) {
+      registerAndLogin(deis, function(err) {
         expect(err).to.be(null);
         deis.user.cancelAccount(function(err) {
-          deis.register('deis@deis.io', function(err, user) {
+          registerAndLogin(deis, function(err) {
             expect(err).to.be(null);
-            deis.login(function(err) {
+            expect(deis.token).to.be.a('string');
+            expect(deis.authenticated).to.be.eql(true);
+            deis.user.changePassword('newuser', 'user', function(err) {
               expect(err).to.be(null);
-              expect(deis.token).to.be.a('string');
-              expect(deis.authenticated).to.be.eql(true);
+              deis = new DeisApi({
+                controller: 'deis.local3.deisapp.com',
+                username: 'super',
+                password: 'user'
+              });
 
-              deis.user.changePassword('newuser', 'user', function(err) {
+              deis.login(function(err) {
                 expect(err).to.be(null);
-                deis = new DeisApi({
-                  controller: 'deis.local3.deisapp.com',
-                  username: 'super',
-                  password: 'user'
-                });
-
-                deis.login(function(err) {
-                  expect(err).to.be(null);
-                  deis.user.cancelAccount(function(err) {
-                    done();
-                  });
+                deis.user.cancelAccount(function(err) {
+                  done();
                 });
               });
             });

@@ -1,5 +1,8 @@
 var expect = require('expect.js'),
+    once = require('once'),
     DeisApi = require('../');
+
+var APP_NAME = 'app-config-test';
 
 describe('apps suite', function() {
 
@@ -10,11 +13,15 @@ describe('apps suite', function() {
   });
 
   before(function(done) {
+    done = once(done);
     deis.login(function(err) {
       deis.user.cancelAccount(function(err) {
         deis.register('deis@deis.io', function(err, user) {
           deis.login(function(err) {
-            done();
+            deis.apps.destroy(APP_NAME, function(err) {
+              console.log(err);
+              done();
+            });
           });
         });
       });
@@ -30,7 +37,7 @@ describe('apps suite', function() {
   });
 
   it('should create an app ', function(done) {
-    deis.apps.create('app-test', function(err, app) {
+    deis.apps.create('app-config-test', function(err, app) {
       expect(err).to.be(null);
       expect(app).to.be.a(Object);
       done();
@@ -69,7 +76,7 @@ describe('apps suite', function() {
   });
 
   it('should destroy the new app', function(done) {
-    deis.apps.destroy('app-test', function(err) {
+    deis.apps.destroy('app-config-test', function(err) {
       expect(err).to.be(null);
       done();
     });
