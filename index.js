@@ -59,20 +59,17 @@ module.exports = function Deis(configuration) {
 
   // public interface
   this.api = {
-    register: require('./lib/register')(deis),
-    login: require('./lib/login')(deis),
-    logout: require('./lib/logout')(deis),
-    user: require('./lib/user')(deis),
     apps: require('./lib/apps')(deis),
-    ps: require('./lib/ps')(deis),
+    auth: require('./lib/auth')(deis),
+    builds: require('./lib/builds')(deis),
     config: require('./lib/config')(deis),
     domains: require('./lib/domains')(deis),
-    builds: require('./lib/builds')(deis),
-    limits: require('./lib/limits')(deis),
-    tags: noop,
-    releases: require('./lib/releases')(deis),
     keys: noop,
-    perms: noop
+    limits: require('./lib/limits')(deis),
+    perms: noop,
+    ps: require('./lib/ps')(deis),
+    releases: require('./lib/releases')(deis),
+    tags: noop
   };
 
   // mimic the deis cli shortcuts.

@@ -13,7 +13,7 @@ describe('apps config suite', function() {
 
   before(function(done) {
     deis.login(function(err) {
-      deis.user.cancelAccount(function(err) {
+      deis.auth.cancel(function(err) {
         deis.register('deis@deis.io', function(err, user) {
           deis.login(function(err) {
             deis.apps.create(APP_NAME, function(err, app) {

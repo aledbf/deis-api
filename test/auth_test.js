@@ -3,7 +3,7 @@ var expect = require('expect.js'),
 
 function removeAccount(deis, callback) {
   deis.login(function(err) {
-    deis.user.cancelAccount(callback);
+    deis.auth.cancel(callback);
   });
 }
 
@@ -57,12 +57,12 @@ describe('auth suite', function() {
     removeAccount(deis, function(err) {
       registerAndLogin(deis, function(err) {
         expect(err).to.be(null);
-        deis.user.cancelAccount(function(err) {
+        deis.auth.cancel(function(err) {
           registerAndLogin(deis, function(err) {
             expect(err).to.be(null);
             expect(deis.token).to.be.a('string');
             expect(deis.authenticated).to.be.eql(true);
-            deis.user.changePassword('newuser', 'user', function(err) {
+            deis.auth.passwd('newuser', 'user', function(err) {
               expect(err).to.be(null);
               deis = new DeisApi({
                 controller: 'deis.local3.deisapp.com',
@@ -72,7 +72,7 @@ describe('auth suite', function() {
 
               deis.login(function(err) {
                 expect(err).to.be(null);
-                deis.user.cancelAccount(function(err) {
+                deis.auth.cancel(function(err) {
                   done();
                 });
               });

@@ -15,11 +15,10 @@ describe('apps suite', function() {
   before(function(done) {
     done = once(done);
     deis.login(function(err) {
-      deis.user.cancelAccount(function(err) {
+      deis.auth.cancel(function(err) {
         deis.register('deis@deis.io', function(err, user) {
           deis.login(function(err) {
             deis.apps.destroy(APP_NAME, function(err) {
-              console.log(err);
               done();
             });
           });

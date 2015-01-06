@@ -10,7 +10,7 @@ describe('login suite', function() {
     });
 
     deis.login(function(err) {
-      deis.user.cancelAccount(function(err) {
+      deis.auth.cancel(function(err) {
         done();
       });
     });
