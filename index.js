@@ -64,16 +64,33 @@ module.exports = function Deis(configuration) {
     logout: require('./lib/logout')(deis),
     user: require('./lib/user')(deis),
     apps: require('./lib/apps')(deis),
-    ps: noop,
+    ps: require('./lib/ps')(deis),
     config: require('./lib/config')(deis),
-    domains: noop,
-    builds: noop,
-    limits: noop,
+    domains: require('./lib/domains')(deis),
+    builds: require('./lib/builds')(deis),
+    limits: require('./lib/limits')(deis),
     tags: noop,
     releases: require('./lib/releases')(deis),
     keys: noop,
     perms: noop
   };
+
+  // mimic the deis cli shortcuts.
+  this.api.create = this.api.apps.create;
+  this.api.destroy = this.api.apps.destroy;
+  this.api.info = this.api.apps.info;
+  this.api.login = this.api.auth.login;
+  this.api.logout = this.api.auth.logout;
+  this.api.logs = this.api.apps.logs;
+  this.api.open = this.api.apps.open;
+  this.api.passwd = this.api.auth.passwd;
+  this.api.pull = this.api.builds.create;
+  this.api.register = this.api.auth.register;
+  this.api.rollback = this.api.releases.rollback;
+  this.api.run = this.api.apps.run;
+  this.api.scale = this.api.ps.scale;
+  //this.api.sharing    =this.api.perms:list
+  // this.api.whoami     =this.api.auth.whoami;
 
   this.api.__defineGetter__('username', function() {
     return configuration.username;
