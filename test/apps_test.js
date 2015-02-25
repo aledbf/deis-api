@@ -1,5 +1,4 @@
 var expect = require('expect.js'),
-    once = require('once'),
     DeisApi = require('../');
 
 var APP_NAME = 'app-config-test';
@@ -13,7 +12,6 @@ describe('apps suite', function() {
   });
 
   before(function(done) {
-    done = once(done);
     deis.login(function(err) {
       deis.auth.cancel(function(err) {
         deis.register('deis@deis.io', function(err, user) {

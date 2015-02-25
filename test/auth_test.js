@@ -42,7 +42,6 @@ describe('auth suite', function() {
 
     deis.login(function(err) {
       expect(err).to.be(null);
-      expect(deis.token).to.be.a('string');
       done();
     });
   });
@@ -73,7 +72,6 @@ describe('auth suite', function() {
         deis.auth.cancel(function(err) {
           registerAndLogin(deis, function(err) {
             expect(err).to.be(null);
-            expect(deis.token).to.be.a('string');
             expect(deis.authenticated).to.be.eql(true);
             deis.auth.passwd('newuser', 'user', function(err) {
               expect(err).to.be(null);
@@ -105,7 +103,6 @@ describe('auth suite', function() {
 
     deis.login(function(err) {
       expect(err).to.be.a(Error);
-      expect(deis.token).to.be(null);
       done();
     });
   });

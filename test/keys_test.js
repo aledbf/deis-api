@@ -43,7 +43,7 @@ describe('keys suite', function() {
     deis.keys.list(function(err, keys) {
       expect(err).to.be(null);
       expect(keys.count).to.be.eql(1);
-      expect(keys.results[0]['public']).to.be.eql(TEST_KEY);
+      expect(keys.results[0].public).to.be.eql(TEST_KEY);
       done();
     });
   });

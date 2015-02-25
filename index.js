@@ -2,8 +2,9 @@ var request = require('request-json');
 var format = require('util').format;
 
 module.exports = function Deis(configuration) {
-  this._token = null;
-  this._authenticated = false;
+  var deis = this;
+
+  deis._authenticated = false;
 
   // Check for configuration.
   if (!configuration) {
@@ -23,40 +24,26 @@ module.exports = function Deis(configuration) {
     throw ReferenceError('Deis API configuration requires password property');
   }
 
-  this.protocol = configuration.secure ? 'https' : 'http';
+  deis.protocol = configuration.secure ? 'https' : 'http';
 
-  this.controller = configuration.controller;
+  deis.controller = configuration.controller;
 
-  this.version = configuration.version ? 'v' + configuration.version : 'v1';
+  deis.version = configuration.version ? 'v' + configuration.version : 'v1';
 
-  this.client = request.createClient(format('%s://%s', this.protocol, this.controller));
+  deis.client = request.createClient(format('%s://%s', deis.protocol, deis.controller));
 
-  this.__defineGetter__('username', function() {
-    return configuration.username;
+  Object.defineProperty(deis, 'username', {
+    get: function() { return configuration.username; },
+    configurable: false
   });
 
-  this.__defineGetter__('password', function() {
-    return configuration.password;
-  });
-
-  var deis = this;
-
-  this.__defineGetter__('authenticated', function() {
-    return deis._authenticated;
-  });
-
-  this.__defineSetter__('token', function(new_value) {
-    if (new_value) {
-      deis._token = new_value;
-      deis._authenticated = true;
-    } else {
-      deis._token = null;
-      deis._authenticated = false;
-    }
+  Object.defineProperty(deis, 'password', {
+    get: function() { return configuration.password; },
+    configurable: false
   });
 
   // public interface
-  this.api = {
+  deis.api = {
     apps: require('./lib/apps')(deis),
     auth: require('./lib/auth')(deis),
     builds: require('./lib/builds')(deis),
@@ -71,41 +58,25 @@ module.exports = function Deis(configuration) {
   };
 
   // mimic the deis cli shortcuts.
-  this.api.create = this.api.apps.create;
-  this.api.destroy = this.api.apps.destroy;
-  this.api.info = this.api.apps.info;
-  this.api.login = this.api.auth.login;
-  this.api.logout = this.api.auth.logout;
-  this.api.logs = this.api.apps.logs;
-  this.api.open = this.api.apps.open;
-  this.api.passwd = this.api.auth.passwd;
-  this.api.pull = this.api.builds.create;
-  this.api.register = this.api.auth.register;
-  this.api.rollback = this.api.releases.rollback;
-  this.api.run = this.api.apps.run;
-  this.api.scale = this.api.ps.scale;
-  this.api.sharing = this.api.perms.list;
-  this.api.whoami = this.api.auth.whoami;
+  deis.api.create = deis.api.apps.create;
+  deis.api.destroy = deis.api.apps.destroy;
+  deis.api.info = deis.api.apps.info;
+  deis.api.login = deis.api.auth.login;
+  deis.api.logout = deis.api.auth.logout;
+  deis.api.logs = deis.api.apps.logs;
+  deis.api.open = deis.api.apps.open;
+  deis.api.passwd = deis.api.auth.passwd;
+  deis.api.pull = deis.api.builds.create;
+  deis.api.register = deis.api.auth.register;
+  deis.api.rollback = deis.api.releases.rollback;
+  deis.api.run = deis.api.apps.run;
+  deis.api.scale = deis.api.ps.scale;
+  deis.api.sharing = deis.api.perms.list;
+  deis.api.whoami = deis.api.auth.whoami;
 
-  this.api.__defineGetter__('username', function() {
-    return configuration.username;
-  });
-
-  this.api.__defineGetter__('password', function() {
-    return configuration.password;
-  });
-
-  this.api.__defineGetter__('token', function() {
-    if (deis._token) {
-      return deis._token;
-    } else {
-      return null;
-    }
-  });
-
-  this.api.__defineGetter__('authenticated', function() {
-    return deis._authenticated;
-  });
+  deis.api.username = deis.username;
+  deis.api.password = deis.password;
+  deis.api.authenticated = deis.authenticated;
 
   return this.api;
 };

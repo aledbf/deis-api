@@ -28,7 +28,6 @@ describe('logout suite', function() {
     });
 
     deis.logout(function() {
-      expect(deis.token).to.be(null);
       done();
     });
   });
