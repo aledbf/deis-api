@@ -25,9 +25,6 @@ To run the test the suite required a running deis cluster. It will use `deis.loc
 
 Run `npm test` or `make test`
 
-
 **TODO**
 - [ ] limits
-- [ ] perms
-- [ ] tags
 - [ ] missing tests
