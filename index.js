@@ -1,8 +1,6 @@
 var request = require('request-json');
 var format = require('util').format;
 
-global.noop = function noop() {};
-
 module.exports = function Deis(configuration) {
   this._token = null;
   this._authenticated = false;
@@ -31,7 +29,7 @@ module.exports = function Deis(configuration) {
 
   this.version = configuration.version ? 'v' + configuration.version : 'v1';
 
-  this.client = request.newClient(format('%s://%s', this.protocol, this.controller));
+  this.client = request.createClient(format('%s://%s', this.protocol, this.controller));
 
   this.__defineGetter__('username', function() {
     return configuration.username;
@@ -64,12 +62,12 @@ module.exports = function Deis(configuration) {
     builds: require('./lib/builds')(deis),
     config: require('./lib/config')(deis),
     domains: require('./lib/domains')(deis),
-    keys: noop,
+    keys: require('./lib/keys')(deis),
     limits: require('./lib/limits')(deis),
-    perms: noop,
+    perms: require('./lib/perms')(deis),
     ps: require('./lib/ps')(deis),
     releases: require('./lib/releases')(deis),
-    tags: noop
+    tags: require('./lib/tags')(deis)
   };
 
   // mimic the deis cli shortcuts.
@@ -86,8 +84,8 @@ module.exports = function Deis(configuration) {
   this.api.rollback = this.api.releases.rollback;
   this.api.run = this.api.apps.run;
   this.api.scale = this.api.ps.scale;
-  //this.api.sharing    =this.api.perms:list
-  // this.api.whoami     =this.api.auth.whoami;
+  this.api.sharing = this.api.perms.list;
+  this.api.whoami = this.api.auth.whoami;
 
   this.api.__defineGetter__('username', function() {
     return configuration.username;

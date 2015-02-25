@@ -47,6 +47,19 @@ describe('auth suite', function() {
     });
   });
 
+  it('should return whoami info', function(done) {
+    var deis = new DeisApi({
+      controller: 'deis.local3.deisapp.com',
+      username: 'test',
+      password: 'opensesame'
+    });
+
+    var whoami = deis.whoami();
+    expect(whoami).to.be.a('object');
+    expect(whoami).to.be.eql({ message: 'You are test at deis.local3.deisapp.com' });
+    done();
+  });
+
   it('should allow the password change', function(done) {
     var deis = new DeisApi({
       controller: 'deis.local3.deisapp.com',
@@ -96,4 +109,5 @@ describe('auth suite', function() {
       done();
     });
   });
+
 });
