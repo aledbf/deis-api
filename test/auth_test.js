@@ -63,28 +63,26 @@ describe('auth suite', function() {
     var deis = new DeisApi({
       controller: 'deis.local3.deisapp.com',
       username: 'super',
-      password: 'newuser'
+      password: 'user'
     });
 
-    removeAccount(deis, function(err) {
-      registerAndLogin(deis, function(err) {
-        expect(err).to.be(null);
-        deis.auth.cancel(function(err) {
-          registerAndLogin(deis, function(err) {
-            expect(err).to.be(null);
-            expect(deis.authenticated).to.be.eql(true);
-            deis.auth.passwd('newuser', 'user', function(err) {
+    deis.login(function(err) {
+      deis.auth.cancel(function(err) {
+        deis.register('deis@deis.io', function(err, user) {
+          expect(err).to.be(null);
+          deis.login(function(err) {
+            deis.auth.passwd('user', 'newuser', function(err) {
               expect(err).to.be(null);
               deis = new DeisApi({
                 controller: 'deis.local3.deisapp.com',
                 username: 'super',
-                password: 'user'
+                password: 'newuser'
               });
 
               deis.login(function(err) {
                 expect(err).to.be(null);
                 deis.auth.cancel(function(err) {
-                  done();
+                  done(err);
                 });
               });
             });

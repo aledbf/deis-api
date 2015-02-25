@@ -114,26 +114,30 @@ describe('app config, tags and perms suite', function() {
     deis.perms.list(APP_NAME, function(err, values) {
       expect(err).to.be(null);
       expect(values).to.be.an(Object);
-      expect(Object.keys(values).length).to.be.eql(0);
+      expect(Object.keys(values).length).to.be.eql(1);
+      expect(values).to.be.eql(expected);
       done();
     });
   });
 
   it('should add new perm for user "deis"', function(done) {
     var expected = {
-      users: ['deis']
+      users: ['test']
     };
 
-    deis.perms.create('deis', APP_NAME, function(err, values) {
+    deis.perms.create('test', APP_NAME, function(err) {
       expect(err).to.be(null);
-      expect(values).to.be.an(Object);
-      expect(Object.keys(values).length).to.be.eql(1);
-      expect(values).to.be.eql(test);
-      done();
+      deis.perms.list(APP_NAME, function(err, values) {
+        expect(err).to.be(null);
+        expect(values).to.be.an(Object);
+        expect(Object.keys(values).length).to.be.eql(1);
+        expect(values).to.be.eql(expected);
+        done();
+      });
     });
   });
 
-  it('should remove the permission for user "deis"', function(done) {
+  it('should remove the permission for user "test"', function(done) {
     deis.tags.unset(APP_NAME, ['location'], function(err, values) {
       expect(err).to.be(null);
       expect(values).to.be.an(Object);
