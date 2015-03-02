@@ -1,6 +1,6 @@
 {
   "name": "deis-api",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Wrapper for deis.io API",
   "repository": {
     "type": "git",
