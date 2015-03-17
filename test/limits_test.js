@@ -3,7 +3,7 @@ var expect = require('expect.js'),
 
 var APP_NAME = 'app-config-test';
 
-describe('apps suite', function() {
+describe('limits suite', function() {
 
   var deis = new DeisApi({
     controller: 'deis.local3.deisapp.com',
