@@ -33,27 +33,32 @@ describe('limits suite', function() {
       deis.limits.list(APP_NAME, function(err, limits) {
         expect(err).to.be(null);
         expect(limits).to.be.a(Object);
-        expect(Object.keys(limits).length).to.be.eql(2);
-        expect(Object.keys(limits.memory).length).to.be.eql(0);
-        expect(Object.keys(limits.cpu).length).to.be.eql(0);
+        expect(Object.keys(limits).length).to.be.eql(0);
+        expect(limits.memory).to.be(undefined);
+        expect(limits.cpu).to.be(undefined);
         done();
       });
     });
   });
 
   it('should set memory limits', function(done) {
-    deis.limits.set(APP_NAME, {
+    var customLimits = {
       memory: {
         web: '1G'
       }
-    }, function(err, limits) {
+    };
+
+    deis.limits.set(APP_NAME, customLimits, function(err, limits) {
       expect(err).to.be(null);
       expect(limits).to.be.a(Object);
       expect(Object.keys(limits).length).to.be.eql(1);
       expect(Object.keys(limits.memory).length).to.be.eql(1);
       expect(limits.cpu).to.be(undefined);
       expect(limits.memory.web).to.be.eql('1G');
-      done();
+      deis.limits.list(APP_NAME, function(err, values) {
+        expect(values).to.be.eql(customLimits);
+        done();
+      });
     });
   });
 
@@ -61,10 +66,13 @@ describe('limits suite', function() {
     deis.limits.unset(APP_NAME, 'memory', 'web', function(err, limits) {
       expect(err).to.be(null);
       expect(limits).to.be.a(Object);
-      console.log(limits)
-      expect(Object.keys(limits).length).to.be.eql(1);
+      expect(Object.keys(limits).length).to.be.eql(0);
       expect(limits.cpu).to.be(undefined);
-      expect(limits.memory).to.be(null);
+      expect(limits.memory).to.be(undefined);
+      deis.config.list(APP_NAME, function(err, values) {
+        expect(values.memory).to.be.eql({});
+        done();
+      });
       done();
     });
   });
