@@ -1,4 +1,4 @@
-var request = require('request-json');
+var request = require('request-json-light');
 var format = require('util').format;
 
 module.exports = function Deis(configuration) {
@@ -30,7 +30,7 @@ module.exports = function Deis(configuration) {
 
   deis.version = configuration.version ? 'v' + configuration.version : 'v1';
 
-  deis.client = request.createClient(format('%s://%s', deis.protocol, deis.controller));
+  deis.client = request.newClient(format('%s://%s', deis.protocol, deis.controller));
 
   Object.defineProperty(deis, 'username', {
     get: function() { return configuration.username; },
