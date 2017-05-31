@@ -1,6 +1,6 @@
 {
   "name": "deis-api",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "dependencies": {
     "asn1": {
       "version": "0.2.3",
